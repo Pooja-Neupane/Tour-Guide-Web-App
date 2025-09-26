@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tour Guide Web App</title>
+  <style>
+    /* General */
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb, #a18cd1);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #fff;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 2.3rem;
+      font-weight: 700;
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      border-bottom: 2px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Container */
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      padding: 40px 20px;
+      opacity: 1;
+      transition: opacity 0.8s ease;
+    }
+
+    /* Cards */
+    .card {
+      width: 270px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-12px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 3px solid #ff9a9e;
+    }
+    .card h3 {
+      margin: 12px;
+      text-align: center;
+      font-size: 1.3rem;
+      color: #ffcc70;
+    }
+    .card p {
+      font-size: 0.9rem;
+      padding: 0 16px 18px;
+      color: #f1f1f1;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    /* Hidden state */
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+    }
+
+    /* Back button */
+    .back-btn {
+      display: block;
+      margin: 20px auto 40px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #ff9966, #ff5e62);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .back-btn:hover {
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      transform: scale(1.08);
+    }
+
+    /* Animation */
+    .fade-in {
+      animation: fadeIn 0.7s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>🌅 Tour Guide Web App</header>
+
+  <!-- Country Selection -->
+  <section id="countries" class="container">
+    <div class="card fade-in" onclick="showPlaces('japan')">
+      <img src="https://tse1.mm.bing.net/th/id/OIP.bSnTokC_c4OMgm-bm9OfyQHaE2?rs=1&pid=ImgDetMain&o=7&rm=3">
+      <h3>Japan</h3>
+    </div>
+    <div class="card fade-in" onclick="showPlaces('france')">
+      <img src="https://static.vecteezy.com/system/resources/previews/027/002/084/non_2x/aerial-view-of-the-eiffel-tower-at-sunset-paris-france-aerial-panoramic-view-of-paris-with-eiffel-tower-at-sunset-france-ai-generated-free-photo.jpg">
+      <h3>France</h3>
+    </div>
+    <div class="card fade-in" onclick="showPlaces('nepal')">
+      <img src="https://tse3.mm.bing.net/th/id/OIP.96C97LVXEi0x3i54NpmSxAHaFM?rs=1&pid=ImgDetMain&o=7&rm=3">
+      <h3>Nepal</h3>
+    </div>
+  </section>
+
+  <!-- Places Section -->
+  <section id="places" class="container hidden"></section>
+  <button id="backBtn" class="back-btn hidden" onclick="goBack()">⬅ Back</button>
+
+  <script>
+    const data = {
+      japan: [
+        {
+          name: "Mount Fuji",
+          img: "https://tse4.mm.bing.net/th/id/OIP.wIFembgBTONDbH5VBphtbwHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
+          desc: "Mount Fuji is Japan's tallest peak and an iconic symbol of beauty. Tourists visit to hike and admire its breathtaking view."
+        },
+        {
+          name: "Tokyo Tower",
+          img: "https://tse3.mm.bing.net/th/id/OIP.pownOGZrp8HKBok0EYSOwgHaKi?rs=1&pid=ImgDetMain&o=7&rm=3",
+          desc: "Tokyo Tower offers panoramic views of the bustling capital. It is a must-visit for lovers of city skylines."
+        },
+        {
+          name: "Kyoto Temples",
+          img: "https://tse2.mm.bing.net/th/id/OIP.C6lsoMs7SOkiLA5Eke-XWgHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
+          desc: "Kyoto’s temples showcase Japan’s traditional architecture and spiritual heritage."
+        }
+      ],
+      france: [
+        {
+          name: "Eiffel Tower",
+          img: "https://i.pinimg.com/originals/42/c5/40/42c54021c900665121a38b793a4c0c67.jpg",
+          desc: "The Eiffel Tower is France’s global icon and a romantic spot offering stunning views of Paris."
+        },
+        {
+          name: "Louvre Museum",
+          img: "https://th.bing.com/th/id/R.4a21182bc8151fe352930224ce316759?rik=w%2bekm3hUqF0%2fHg&pid=ImgRaw&r=0",
+          desc: "The Louvre is the world’s largest art museum, home to the famous Mona Lisa and countless masterpieces."
+        },
+        {
+          name: "Mont Saint-Michel",
+          img: "https://tse4.mm.bing.net/th/id/OIP.G3hWZz86AJQLaMFkWht3iQHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
+          desc: "Mont Saint-Michel is a magical island with a medieval abbey, attracting millions of tourists yearly."
+        }
+      ],
+      nepal: [
+        {
+          name: "Mount Everest",
+          img: "https://www.tripsavvy.com/thmb/KxZhb48LgY1JcWtmydz1yIszonc=/2119x1415/filters:no_upscale():max_bytes(150000):strip_icc()/Everest-e25735b970ff47128fa92e21f3ab6afd.jpg",
+          desc: "Mount Everest, the world’s highest peak, draws climbers and adventurers from across the globe."
+        },
+        {
+          name: "Pashupatinath Temple",
+          img: "https://img.freepik.com/premium-photo/pashupatinath-temple_78361-1351.jpg?w=2000",
+          desc: "A sacred Hindu temple located in Kathmandu, Pashupatinath is a UNESCO World Heritage Site."
+        },
+        {
+          name: "Pokhara",
+          img: "https://tse1.mm.bing.net/th/id/OIP.ISwxERpQ3u9UpMufPQcdWQHaEi?rs=1&pid=ImgDetMain&o=7&rm=3",
+          desc: "Pokhara is a peaceful city known for its lakes, mountain views, and adventure activities."
+        }
+      ]
+    };
+
+    function showPlaces(country) {
+      const countries = document.getElementById('countries');
+      const places = document.getElementById('places');
+      const backBtn = document.getElementById('backBtn');
+
+      countries.classList.add('hidden');
+      places.classList.remove('hidden');
+      backBtn.classList.remove('hidden');
+
+      places.innerHTML = "";
+      data[country].forEach((place, index) => {
+        const card = document.createElement('div');
+        card.className = "card fade-in";
+        card.style.animationDelay = `${index * 0.2}s`;
+        card.innerHTML = `
+          <img src="${place.img}" alt="${place.name}">
+          <h3>${place.name}</h3>
+          <p>${place.desc}</p>
+        `;
+        places.appendChild(card);
+      });
+    }
+
+    function goBack() {
+      const countries = document.getElementById('countries');
+      const places = document.getElementById('places');
+      const backBtn = document.getElementById('backBtn');
+
+      countries.classList.remove('hidden');
+      places.classList.add('hidden');
+      backBtn.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
